@@ -8,15 +8,15 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
   <style>
-    /* ─── RESET & BASE ─── */
+    
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
       --steel:   #1c2333;
       --iron:    #2e3a50;
-      --accent:  #c8922a;      /* warm amber — gear/metal gold */
+      --accent:  #c8922a;      
       --accent2: #e8b84b;
-      --light:   #f5f3ef;      /* off-white parchment */
+      --light:   #f5f3ef;      
       --mid:     #8a8f9a;
       --white:   #ffffff;
       --card-bg: #ffffff;
@@ -33,7 +33,7 @@
       overflow-x: hidden;
     }
 
-    /* ─── HERO ─── */
+  
     .hero {
       background: var(--steel);
       color: var(--white);
@@ -46,7 +46,7 @@
       justify-content: flex-end;
     }
 
-    /* subtle gear-pattern background */
+    
     .hero::before {
       content: '';
       position: absolute;
@@ -57,7 +57,7 @@
       pointer-events: none;
     }
 
-    /* diagonal accent stripe */
+    
     .hero::after {
       content: '';
       position: absolute;
@@ -112,7 +112,7 @@
       letter-spacing: 0.5px;
     }
 
-    /* ─── SECTION CARD ─── */
+
     .section-card {
       background: var(--white);
       border-radius: var(--radius);
@@ -121,7 +121,7 @@
       box-shadow: 0 2px 16px rgba(28,35,51,0.07);
     }
 
-    /* ─── BATCH PHOTO STRIP ─── */
+  
     .batch-header {
       padding: 22px 20px 16px;
     }
@@ -195,7 +195,7 @@
       transform: scale(1.3);
     }
 
-    /* ─── ACCENT DIVIDER ─── */
+    
     .accent-bar {
       height: 3px;
       background: linear-gradient(90deg, var(--accent), var(--accent2));
@@ -203,7 +203,7 @@
       border-radius: 2px;
     }
 
-    /* ─── ACADEMIC NOTE ─── */
+   
     .note-card {
       background: var(--steel);
       border-radius: var(--radius);
@@ -254,7 +254,7 @@
       text-align: right;
     }
 
-    /* ─── STUDENT PROFILES ─── */
+    
     .profiles-section {
       padding: 0 16px 24px;
     }
@@ -267,7 +267,7 @@
       padding-top: 4px;
     }
 
-    /* Search bar */
+    
     .search-wrap {
       position: relative;
       margin-bottom: 16px;
@@ -298,7 +298,7 @@
       font-size: 14px;
     }
 
-    /* Student card */
+  
     .student-card {
       background: var(--white);
       border: 1.5px solid #ede9e3;
@@ -334,7 +334,7 @@
       display: block;
     }
 
-    /* placeholder avatar when no photo */
+
     .student-photo.placeholder {
       background:
         linear-gradient(135deg, #eee, #ddd) padding-box,
@@ -387,7 +387,7 @@
       display: block;
     }
 
-    /* ─── FOOTER ─── */
+
     .footer {
       background: var(--steel);
       color: rgba(255,255,255,0.6);
@@ -414,7 +414,7 @@
       text-decoration: none;
     }
 
-    /* ─── NO RESULTS ─── */
+    
     .no-results {
       text-align: center;
       padding: 40px 20px;
@@ -426,7 +426,7 @@
 </head>
 <body>
 
-<!-- ═══════════════════ HERO ═══════════════════ -->
+
 <header class="hero">
   <div class="hero-inner">
     <img
@@ -443,20 +443,20 @@
   </div>
 </header>
 
-<!-- ═══════════════════ BATCH SECTION ═══════════════════ -->
+
 <div class="section-card">
   <div class="batch-header">
-    <!-- ✏️ EDIT: Change section name below -->
+   
     <h2 class="batch-label">ME 24 — Section A</h2>
-    <!-- ✏️ EDIT: Change tagline below -->
+ 
     <p class="batch-sublabel">Where Gears Turn and Engineers are Born</p>
   </div>
 
-  <!-- Photo Slider -->
+  
   <div class="photo-slider">
     <div class="photo-track" id="photoTrack">
 
-      <!-- ✏️ EDIT: Replace src with your actual photo URLs. Add/remove <div class="photo-slide"> blocks as needed -->
+    
       <div class="photo-slide">
         <img src="photos/Slide_SecA_grpclass.jpeg" alt="Students of Section A" onerror="this.src='https://placehold.co/600x210/1c2333/c8922a?text=ME+24+Section+A'"/>
         <span class="photo-caption">Students of Section A — ME, RUET</span>
@@ -472,57 +472,46 @@
         <span class="photo-caption">Electric Vehicle — ME Dept., RUET</span>
       </div>
 
-    </div><!-- /photo-track -->
+    </div>
     <div class="slider-dots" id="dots"></div>
-  </div><!-- /photo-slider -->
+  </div>
 
   <div class="accent-bar" style="margin-top:10px;"></div>
-</div><!-- /section-card -->
+</div>
 
-<!-- ═══════════════════ ACADEMIC NOTE ═══════════════════ -->
+
 <div class="note-card">
   <p class="note-label">Academic Note</p>
   <p class="note-text">
     <strong>Mechanical Engineering</strong> is the broadest and oldest branch of engineering —
     the mother of all engineering disciplines.<br><br>
-    <!-- ✏️ EDIT: Change the honour code text below if needed -->
+    
     <strong>Honour Code :</strong> An Engineer shall live a life of honesty &amp; dignity.
     He/She shall not cheat, steal or lie and must commit themselves to the welfare of mankind.
   </p>
   <p class="note-attribution">— Department of Mechanical Engineering, RUET</p>
 </div>
 
-<!-- ═══════════════════ STUDENT PROFILES ═══════════════════ -->
+
 <div class="profiles-section">
   <h2 class="profiles-heading">Student Profiles</h2>
 
-  <!-- Search bar -->
+ 
   <div class="search-wrap">
     <span class="search-icon">🔍</span>
     <input type="text" id="searchInput" placeholder="Search by name, ID, or hometown…" oninput="filterStudents()"/>
   </div>
 
-  <!-- ════════════════════════════════════════════════════
-       ✏️ HOW TO ADD STUDENTS:
-       Copy one <div class="student-card"> block below
-       and paste it. Then fill in:
-         - name
-         - id (like 2400XXX)
-         - college
-         - hometown
-         - photo src (URL or local file path)
-       If no photo, remove the <img> tag and use
-       the initials placeholder instead.
-  ════════════════════════════════════════════════════ -->
+
 
   <div id="studentList">
 
-    <!-- ── STUDENT 1 ── -->
+ 
     <div class="student-card" data-name="MD. Muntasir Mahbub Ariyan" data-id="2402053" data-hometown="Bogura">
       <div class="student-photo-wrap">
-        <!-- Replace URL with actual photo. For a local file: src="photos/ariyan.jpg" -->
+     
         <img class="student-photo" src="photos/2402053.jpeg" alt="Ariyan"/>
-        <!-- Remove the line below if this student is NOT the developer -->
+        
         <span class="badge">Dev</span>
       </div>
       <p class="student-name">Ariyan</p>
@@ -533,7 +522,7 @@
       </div>
     </div>
 
-    <!-- ── STUDENT 2 ── -->
+ 
     <div class="student-card" data-name="Rafsan Jani" data-id="2402051" data-hometown="Mymensingh">
       <div class="student-photo-wrap">
         <img class="student-photo" src="photos/2402051.jpeg" alt="Rafsan Jani"/>
@@ -546,7 +535,7 @@
       </div>
     </div>
 
-    <!-- ── STUDENT 3 ── -->
+   
     <div class="student-card" data-name="Nusrat Jahan" data-id="2400003" data-hometown="Sylhet">
       <div class="student-photo-wrap">
         <img class="student-photo" src="https://placehold.co/82x82/2e3a50/c8922a?text=N" alt="Nusrat Jahan"/>
@@ -559,29 +548,27 @@
       </div>
     </div>
 
-    <!-- ── ADD MORE STUDENTS HERE ── -->
-    <!-- Copy the block above and paste it below, changing the details -->
 
-  </div><!-- /studentList -->
+  </div>
 
   <p class="no-results" id="noResults">No student found matching your search.</p>
 
-</div><!-- /profiles-section -->
+</div>
 
-<!-- ═══════════════════ FOOTER ═══════════════════ -->
+
 <footer class="footer">
   <p class="footer-logo">ME · 24</p>
   <p class="footer-text">
-    <!-- ✏️ EDIT: Change your name and section below -->
+   
     © Designed &amp; Developed by <strong style="color:#e8b84b">MD. Muntasir Mahbub Ariyan</strong><br>
     Section A &nbsp;·&nbsp; Department of Mechanical Engineering<br>
     <a href="https://www.me.ruet.ac.bd">me.ruet.ac.bd</a>
   </p>
 </footer>
 
-<!-- ═══════════════════ SCRIPTS ═══════════════════ -->
+
 <script>
-  // ── Photo Slider ──
+
   const track  = document.getElementById('photoTrack');
   const slides = track.querySelectorAll('.photo-slide');
   const dotsEl = document.getElementById('dots');
@@ -603,7 +590,7 @@
 
   setInterval(() => goTo((current + 1) % slides.length), 4000);
 
-  // ── Search / Filter ──
+  
   function filterStudents() {
     const q    = document.getElementById('searchInput').value.toLowerCase();
     const cards = document.querySelectorAll('.student-card');

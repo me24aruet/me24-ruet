@@ -1,0 +1,2475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ME 24 — RUET Mechanical Engineering</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    /* ─── RESET & BASE ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --steel:   #1c2333;
+      --iron:    #2e3a50;
+      --accent:  #c8922a;      /* warm amber — gear/metal gold */
+      --accent2: #e8b84b;
+      --light:   #f5f3ef;      /* off-white parchment */
+      --mid:     #8a8f9a;
+      --white:   #ffffff;
+      --card-bg: #ffffff;
+      --radius:  14px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--light);
+      color: var(--steel);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      background: var(--steel);
+      color: var(--white);
+      padding: 0;
+      position: relative;
+      overflow: hidden;
+      min-height: 340px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    /* subtle gear-pattern background */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 80% 20%, rgba(200,146,42,0.12) 0%, transparent 50%),
+        radial-gradient(circle at 10% 80%, rgba(200,146,42,0.08) 0%, transparent 40%);
+      pointer-events: none;
+    }
+
+    /* diagonal accent stripe */
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent));
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      padding: 36px 24px 40px;
+      display: flex;
+      align-items: flex-end;
+      gap: 20px;
+    }
+
+    .hero-logo {
+      width: 70px;
+      height: 70px;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4));
+      flex-shrink: 0;
+    }
+
+    .hero-text {}
+
+    .hero-tagline {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-bottom: 6px;
+    }
+
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(28px, 7vw, 42px);
+      letter-spacing: 1px;
+      line-height: 1.05;
+      color: var(--white);
+    }
+
+    .hero-sub {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.55);
+      margin-top: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    /* ─── SECTION CARD ─── */
+    .section-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      margin: 20px 16px;
+      overflow: hidden;
+      box-shadow: 0 2px 16px rgba(28,35,51,0.07);
+    }
+
+    /* ─── BATCH PHOTO STRIP ─── */
+    .batch-header {
+      padding: 22px 20px 16px;
+    }
+
+    .batch-label {
+      font-family: 'DM Serif Display', serif;
+      font-size: 22px;
+      color: var(--steel);
+      line-height: 1.1;
+    }
+
+    .batch-sublabel {
+      font-size: 12.5px;
+      color: var(--mid);
+      margin-top: 3px;
+      font-weight: 400;
+    }
+
+    .photo-slider {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .photo-track {
+      display: flex;
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .photo-slide {
+      min-width: 100%;
+      position: relative;
+    }
+
+    .photo-slide img {
+      width: 100%;
+      height: 210px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .photo-caption {
+      position: absolute;
+      bottom: 12px;
+      left: 12px;
+      background: rgba(28,35,51,0.82);
+      backdrop-filter: blur(6px);
+      color: var(--white);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      padding: 5px 12px;
+      border-radius: 20px;
+    }
+
+    .slider-dots {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 0 4px;
+    }
+
+    .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #ddd;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .dot.active {
+      background: var(--accent);
+      transform: scale(1.3);
+    }
+
+    /* ─── ACCENT DIVIDER ─── */
+    .accent-bar {
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      margin: 0 20px 0;
+      border-radius: 2px;
+    }
+
+    /* ─── ACADEMIC NOTE ─── */
+    .note-card {
+      background: var(--steel);
+      border-radius: var(--radius);
+      margin: 0 16px 20px;
+      padding: 22px 20px;
+      color: var(--white);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .note-card::before {
+      content: '"';
+      position: absolute;
+      top: -10px; right: 16px;
+      font-family: 'DM Serif Display', serif;
+      font-size: 120px;
+      color: rgba(200,146,42,0.15);
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .note-label {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent2);
+      font-weight: 500;
+      margin-bottom: 12px;
+    }
+
+    .note-text {
+      font-size: 13.5px;
+      line-height: 1.75;
+      color: rgba(255,255,255,0.82);
+      font-weight: 300;
+    }
+
+    .note-text strong {
+      color: var(--white);
+      font-weight: 500;
+    }
+
+    .note-attribution {
+      margin-top: 14px;
+      font-size: 11px;
+      color: var(--accent2);
+      font-style: italic;
+      text-align: right;
+    }
+
+    /* ─── STUDENT PROFILES ─── */
+    .profiles-section {
+      padding: 0 16px 24px;
+    }
+
+    .profiles-heading {
+      font-family: 'DM Serif Display', serif;
+      font-size: 20px;
+      color: var(--steel);
+      margin-bottom: 14px;
+      padding-top: 4px;
+    }
+
+    /* Search bar */
+    .search-wrap {
+      position: relative;
+      margin-bottom: 16px;
+    }
+
+    .search-wrap input {
+      width: 100%;
+      padding: 11px 16px 11px 40px;
+      border: 1.5px solid #e0ddd8;
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      color: var(--steel);
+      background: var(--white);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-wrap input:focus {
+      border-color: var(--accent);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 13px; top: 50%;
+      transform: translateY(-50%);
+      color: var(--mid);
+      font-size: 14px;
+    }
+
+    /* Student card */
+    .student-card {
+      background: var(--white);
+      border: 1.5px solid #ede9e3;
+      border-radius: var(--radius);
+      padding: 20px 16px 18px;
+      margin-bottom: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transition: box-shadow 0.2s, transform 0.2s;
+      position: relative;
+    }
+
+    .student-card:active {
+      transform: scale(0.98);
+    }
+
+    .student-photo-wrap {
+      position: relative;
+      margin-bottom: 12px;
+    }
+
+    .student-photo {
+      width: 82px;
+      height: 82px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid transparent;
+      background:
+        linear-gradient(var(--white), var(--white)) padding-box,
+        linear-gradient(135deg, var(--accent), var(--accent2)) border-box;
+      display: block;
+    }
+
+    /* placeholder avatar when no photo */
+    .student-photo.placeholder {
+      background:
+        linear-gradient(135deg, #eee, #ddd) padding-box,
+        linear-gradient(135deg, var(--accent), var(--accent2)) border-box;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      color: var(--mid);
+    }
+
+    .badge {
+      position: absolute;
+      top: 0; right: -2px;
+      background: var(--accent);
+      color: var(--white);
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      padding: 3px 7px;
+      border-radius: 20px;
+      text-transform: uppercase;
+    }
+
+    .student-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 16px;
+      color: var(--steel);
+      line-height: 1.2;
+      margin-bottom: 3px;
+    }
+
+    .student-id {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--accent);
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    .student-info {
+      font-size: 12px;
+      color: var(--mid);
+      line-height: 1.6;
+      font-weight: 400;
+    }
+
+    .student-info span {
+      display: block;
+    }
+
+    /* ─── FOOTER ─── */
+    .footer {
+      background: var(--steel);
+      color: rgba(255,255,255,0.6);
+      text-align: center;
+      padding: 28px 20px;
+      margin-top: 8px;
+    }
+
+    .footer-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      letter-spacing: 2px;
+      color: var(--accent2);
+      margin-bottom: 6px;
+    }
+
+    .footer-text {
+      font-size: 11.5px;
+      line-height: 1.8;
+    }
+
+    .footer-text a {
+      color: var(--accent2);
+      text-decoration: none;
+    }
+
+    .slider-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(28,35,51,0.55);
+  backdrop-filter: blur(4px);
+  border: none;
+  color: white;
+  font-size: 18px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+.slider-arrow:active { background: rgba(200,146,42,0.8); }
+.slider-arrow.left  { left: 10px; }
+.slider-arrow.right { right: 10px; }
+
+.gear-float {
+  position: fixed;
+  bottom: 24px;
+  right: 20px;
+  font-size: 42px;
+  opacity: 0.18;
+  z-index: 999;
+  pointer-events: none;
+  transform-origin: center;
+  transition: opacity 0.3s;
+  line-height: 1;
+}
+
+
+    /* ─── NO RESULTS ─── */
+    .no-results {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--mid);
+      font-size: 13px;
+      display: none;
+    }
+  
+    /* ─── PAGE SYSTEM ─── */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* ─── STUDENT CONTACT ICONS ─── */
+    .student-contacts {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+      justify-content: center;
+    }
+    .contact-icon-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      border: 1.5px solid #ede9e3;
+      background: var(--white);
+      color: var(--steel);
+      text-decoration: none;
+      transition: background 0.2s, border-color 0.2s, transform 0.15s;
+    }
+    .contact-icon-btn:active { transform: scale(0.92); }
+    .contact-icon-btn.fb { border-color: #1877f2; color: #1877f2; }
+    .contact-icon-btn.fb:hover { background: #1877f2; color: white; }
+    .contact-icon-btn.ph { border-color: #25d366; color: #25d366; }
+    .contact-icon-btn.ph:hover { background: #25d366; color: white; }
+
+    /* ─── TOP NAV / QUICK LINKS ─── */
+    .top-nav {
+      margin: 14px 16px 0;
+      padding: 10px 12px;
+      background: rgba(255,255,255,0.92);
+      border: 1px solid #ece6dc;
+      border-radius: 999px;
+      box-shadow: 0 2px 16px rgba(28,35,51,0.05);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      position: sticky;
+      top: 10px;
+      z-index: 20;
+      backdrop-filter: blur(8px);
+    }
+
+    .top-nav-links,
+    .top-nav-icons {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .top-link {
+      text-decoration: none;
+      color: var(--steel);
+      border: 1px solid #e5ded3;
+      background: var(--white);
+      border-radius: 999px;
+      transition: transform 0.2s, border-color 0.2s, background 0.2s, color 0.2s;
+      display: inline-flex;
+      align-items: center;
+      height: 38px;
+      padding: 0 14px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .top-link.active { background: var(--steel); color: var(--white); border-color: var(--steel); }
+    .top-link:hover:not(.active) { border-color: var(--accent); }
+
+    .icon-link {
+      text-decoration: none;
+      color: var(--steel);
+      border: 1px solid #e5ded3;
+      background: var(--white);
+      border-radius: 999px;
+      transition: transform 0.2s, border-color 0.2s, background 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      padding: 0;
+    }
+
+    .top-link:active,
+    .icon-link:active { transform: translateY(0); }
+    .icon-link:hover { border-color: var(--accent); transform: translateY(-1px); }
+
+    .nav-icon {
+      width: 18px;
+      height: 18px;
+      display: block;
+      fill: currentColor;
+      flex-shrink: 0;
+    }
+
+    /* ─── GALLERY ─── */
+    .gallery-section {
+      padding: 0 16px 24px;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      padding: 0 16px 18px;
+    }
+
+    .gallery-item {
+      background: #fbfaf8;
+      border: 1px solid #ede6dc;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 1px 10px rgba(28,35,51,0.04);
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .gallery-caption {
+      padding: 10px 10px 11px;
+      font-size: 12px;
+      line-height: 1.4;
+      color: var(--steel);
+      font-weight: 500;
+    }
+
+    .gallery-caption span {
+      display: block;
+      font-size: 10px;
+      color: var(--mid);
+      font-weight: 400;
+      margin-top: 4px;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+    }
+
+    .gallery-note,
+    .contact-note {
+      margin: 0 16px 16px;
+      font-size: 12px;
+      color: var(--mid);
+      line-height: 1.7;
+    }
+
+    /* ─── CONTACT ─── */
+    .contact-section {
+      padding: 0 16px 24px;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+      padding: 0 16px 18px;
+    }
+
+    .cr-card {
+      background: var(--white);
+      border: 1.5px solid #ede9e3;
+      border-radius: var(--radius);
+      padding: 18px 16px;
+      box-shadow: 0 2px 14px rgba(28,35,51,0.05);
+    }
+
+    .cr-role {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    .cr-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 18px;
+      color: var(--steel);
+      margin-bottom: 8px;
+      line-height: 1.15;
+    }
+
+    .cr-detail {
+      font-size: 13px;
+      color: var(--mid);
+      line-height: 1.7;
+      margin-bottom: 4px;
+      word-break: break-word;
+    }
+
+    .cr-detail a {
+      color: var(--steel);
+      text-decoration: none;
+    }
+
+    .cr-detail a:hover {
+      color: var(--accent);
+    }
+
+    .contact-box {
+      margin: 0 16px 20px;
+      padding: 16px;
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, rgba(28,35,51,0.96), rgba(46,58,80,0.96));
+      color: rgba(255,255,255,0.82);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .contact-box::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at top right, rgba(200,146,42,0.18), transparent 36%),
+        radial-gradient(circle at bottom left, rgba(232,184,75,0.14), transparent 30%);
+      pointer-events: none;
+    }
+
+    .contact-box-inner {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 8px;
+    }
+
+    .contact-box-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 20px;
+      color: var(--white);
+    }
+
+    .contact-box-text {
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    /* ─── SPLASH SCREEN ─── */
+    #splash {
+      position: fixed;
+      inset: 0;
+      background: var(--steel);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+    #splash.hidden { opacity: 0; visibility: hidden; }
+
+    .splash-gear {
+      font-size: 64px;
+      animation: spinGear 1.2s linear infinite;
+      line-height: 1;
+    }
+    @keyframes spinGear {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+    .splash-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 36px;
+      letter-spacing: 6px;
+      color: var(--accent2);
+    }
+    .splash-sub {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+      font-weight: 300;
+    }
+    .splash-bar-wrap {
+      width: 120px;
+      height: 2px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+    .splash-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius: 2px;
+      animation: loadBar 1.6s ease forwards;
+    }
+    @keyframes loadBar {
+      from { width: 0%; }
+      to   { width: 100%; }
+    }
+
+    /* ─── HERO COUNTER ─── */
+    .hero-counter {
+      margin-top: 14px;
+      display: inline-flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+    .hero-counter-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 32px;
+      color: var(--accent2);
+      line-height: 1;
+    }
+    .hero-counter-label {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      font-weight: 300;
+    }
+
+    /* ─── SECTION BADGE ─── */
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(200,146,42,0.15);
+      border: 1px solid rgba(200,146,42,0.3);
+      border-radius: 999px;
+      padding: 4px 12px;
+      margin-top: 10px;
+      font-size: 11px;
+      letter-spacing: 1px;
+      color: var(--accent2);
+      font-weight: 500;
+    }
+
+    /* ─── GALLERY LIGHTBOX ─── */
+    #lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.92);
+      z-index: 8000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 12px;
+      padding: 20px;
+    }
+    #lightbox.open { display: flex; }
+    #lightbox img {
+      max-width: 100%;
+      max-height: 75vh;
+      border-radius: 10px;
+      object-fit: contain;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+    }
+    #lightbox-caption {
+      color: rgba(255,255,255,0.75);
+      font-size: 13px;
+      text-align: center;
+    }
+    #lightbox-close {
+      position: absolute;
+      top: 16px; right: 20px;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 28px;
+      cursor: pointer;
+      line-height: 1;
+      opacity: 0.7;
+    }
+    #lightbox-close:hover { opacity: 1; }
+    .gallery-item { cursor: pointer; }
+    .gallery-item img { transition: transform 0.2s; }
+    .gallery-item:hover img { transform: scale(1.03); }
+
+    /* ─── STUDENT MODAL ─── */
+    #student-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(4px);
+      z-index: 7000;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 0;
+    }
+    #student-modal.open { display: flex; }
+    .modal-card {
+      background: var(--white);
+      border-radius: 20px 20px 0 0;
+      width: 100%;
+      max-width: 480px;
+      padding: 28px 24px 36px;
+      position: relative;
+      animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
+    }
+    .modal-close {
+      position: absolute;
+      top: 14px; right: 18px;
+      background: var(--light);
+      border: none;
+      border-radius: 50%;
+      width: 30px; height: 30px;
+      font-size: 16px;
+      cursor: pointer;
+      color: var(--mid);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .modal-photo {
+      width: 88px; height: 88px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid transparent;
+      background:
+        linear-gradient(var(--white), var(--white)) padding-box,
+        linear-gradient(135deg, var(--accent), var(--accent2)) border-box;
+      margin: 0 auto 12px;
+      display: block;
+    }
+    .modal-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 20px;
+      color: var(--steel);
+      text-align: center;
+      margin-bottom: 2px;
+    }
+    .modal-id {
+      font-size: 11px;
+      color: var(--accent);
+      text-align: center;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+    .modal-divider {
+      height: 1px;
+      background: #ede9e3;
+      margin: 12px 0;
+    }
+    .modal-row {
+      display: flex;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--mid);
+      margin-bottom: 6px;
+      align-items: flex-start;
+    }
+    .modal-row-label {
+      font-weight: 600;
+      color: var(--steel);
+      min-width: 70px;
+      flex-shrink: 0;
+    }
+    .modal-vision-box {
+      background: var(--steel);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-top: 14px;
+      position: relative;
+      overflow: hidden;
+    }
+    .modal-vision-box::before {
+      content: '"';
+      position: absolute;
+      top: -8px; right: 10px;
+      font-family: 'DM Serif Display', serif;
+      font-size: 80px;
+      color: rgba(200,146,42,0.15);
+      line-height: 1;
+    }
+    .modal-vision-label {
+      font-size: 9px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+    .modal-vision-text {
+      font-size: 13px;
+      color: rgba(255,255,255,0.82);
+      line-height: 1.7;
+      font-style: italic;
+      font-weight: 300;
+    }
+    .modal-contacts {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 16px;
+    }
+    .modal-contact-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 18px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      border: 1.5px solid;
+      transition: background 0.2s, color 0.2s;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .modal-contact-btn.fb  { color: #1877f2; border-color: #1877f2; }
+    .modal-contact-btn.fb:hover  { background: #1877f2; color: white; }
+    .modal-contact-btn.wa  { color: #25d366; border-color: #25d366; }
+    .modal-contact-btn.wa:hover  { background: #25d366; color: white; }
+
+    /* make student cards clickable */
+    .student-card { cursor: pointer; }
+    .student-card:hover { box-shadow: 0 4px 20px rgba(28,35,51,0.12); transform: translateY(-2px); }
+
+  </style>
+</head>
+<body>
+
+
+<!-- ═══════════════════ SPLASH SCREEN ═══════════════════ -->
+<div id="splash">
+  <div class="splash-gear">⚙</div>
+  <div class="splash-title">ME · 24</div>
+  <div class="splash-sub">Department of Mechanical Engineering</div>
+  <div class="splash-bar-wrap"><div class="splash-bar"></div></div>
+</div>
+
+<!-- ═══════════════════ GALLERY LIGHTBOX ═══════════════════ -->
+<div id="lightbox" onclick="closeLightbox()">
+  <button id="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightbox-img" src="" alt=""/>
+  <div id="lightbox-caption"></div>
+</div>
+
+<!-- ═══════════════════ STUDENT MODAL ═══════════════════ -->
+<div id="student-modal" onclick="closeModal(event)">
+  <div class="modal-card">
+    <button class="modal-close" onclick="closeModal(null, true)">✕</button>
+    <img class="modal-photo" id="modal-photo" src="" alt=""/>
+    <p class="modal-name"  id="modal-name"></p>
+    <p class="modal-id"    id="modal-id"></p>
+    <div class="modal-divider"></div>
+    <div class="modal-row"><span class="modal-row-label">College</span><span id="modal-college"></span></div>
+    <div class="modal-row"><span class="modal-row-label">Hometown</span><span id="modal-hometown"></span></div>
+    <div class="modal-vision-box">
+      <div class="modal-vision-label">Vision</div>
+      <div class="modal-vision-text" id="modal-vision"></div>
+    </div>
+    <div class="modal-contacts">
+      <a class="modal-contact-btn fb" id="modal-fb" href="#" target="_blank">Facebook</a>
+      <a class="modal-contact-btn wa" id="modal-wa" href="#" target="_blank">WhatsApp</a>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ HERO ═══════════════════ -->
+<header class="hero">
+  <div class="hero-inner">
+    <img
+      class="hero-logo"
+      src="photos/Herologo.png"
+      alt="RUET Logo"
+      onerror="this.style.display='none'"
+    />
+    <div class="hero-text">
+      <p class="hero-tagline">Heaven's Light is Our Guide</p>
+      <h1 class="hero-title">Rajshahi University of<br>Engineering &amp; Technology</h1>
+      <p class="hero-sub">রাজশাহী প্রকৌশল ও প্রযুক্তি বিশ্ববিদ্যালয় &nbsp;·&nbsp; Department of Mechanical Engineering · 24 Series</p>
+      <div class="hero-badge">⚙ Section A &nbsp;·&nbsp; 2024–2025</div>
+      <div class="hero-counter">
+        <span class="hero-counter-num" id="counterNum">0</span>
+        <span class="hero-counter-label">Engineers</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════════ QUICK LINKS ═══════════════════ -->
+<nav class="top-nav" aria-label="Quick links">
+  <div class="top-nav-links">
+    <button class="top-link active" onclick="switchTab('home', this)">Home</button>
+    <button class="top-link" onclick="switchTab('gallery', this)">Gallery</button>
+    <button class="top-link" onclick="switchTab('contact', this)">Contact</button>
+  </div>
+  <div class="top-nav-icons">
+    <a
+      class="icon-link"
+      href="https://www.facebook.com/ruetme24"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="RUET-ME24 Facebook page"
+      title="RUET Facebook"
+    >
+      <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/>
+      </svg>
+    </a>
+    <a
+      class="icon-link"
+      href="mailto:ruet.me24@gmail.com"
+      aria-label="Email contact"
+      title="Email"
+    >
+      <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2Zm0 4.25-8 5-8-5V6l8 5 8-5v2.25Z"/>
+      </svg>
+    </a>
+  </div>
+</nav>
+
+
+<!-- ═══════════════════ GALLERY PAGE ═══════════════════ -->
+<div id="page-gallery" class="page">
+<section id="gallery" class="section-card gallery-section">
+  <div class="batch-header">
+    <h2 class="batch-label">Gallery</h2>
+    <p class="batch-sublabel">Fragments of the memories...</p>
+  </div>
+
+  <p class="gallery-note">
+   <!-- Put your own images inside <strong>photos/gallery/</strong> and change the <strong>src</strong> path below. -->
+  </p>
+
+  <div class="gallery-grid">
+    <figure class="gallery-item" onclick="openLightbox('photos/Gallery1.jpg','ME Wall Painting — Welcoming successors')">
+      <img src="photos/Gallery1.jpg" alt="ME Wall Painting">
+      <figcaption class="gallery-caption">ME Wall Painting <span>Welcoming successors</span></figcaption>
+    </figure>
+    <figure class="gallery-item" onclick="openLightbox('photos/Gallery2.jpg','ME Wall Painting — Welcoming successors')">
+      <img src="photos/Gallery2.jpg" alt="ME Wall Painting">
+      <figcaption class="gallery-caption">ME Wall Painting <span>Welcoming successors</span></figcaption>
+    </figure>
+    <figure class="gallery-item" onclick="openLightbox('photos/Gallery3.jpg','ME Wall Painting — Welcoming successors')">
+      <img src="photos/Gallery3.jpg" alt="ME Wall Painting">
+      <figcaption class="gallery-caption">ME Wall Painting <span>Welcoming successors</span></figcaption>
+    </figure>
+    <figure class="gallery-item" onclick="openLightbox('photos/Gallery4.jpg','ME Wall Painting — Welcoming successors')">
+      <img src="photos/Gallery4.jpg" alt="ME Wall Painting">
+      <figcaption class="gallery-caption">ME Wall Painting <span>Welcoming successors</span></figcaption>
+    </figure>
+    <figure class="gallery-item" onclick="openLightbox('photos/Gallery5.jpeg','Foundry Shop — Casting')">
+      <img src="photos/Gallery5.jpg" alt="Foundry Shop - Casting">
+      <figcaption class="gallery-caption">Foundry Shop <span>Casting</span></figcaption>
+    </figure>
+    <figure class="gallery-item" onclick="openLightbox('photos/Gallery6.jpeg','Foundry Shop — Furnace')">
+      <img src="photos/Gallery6.jpg" alt="Foundry Shop - Furnace">
+      <figcaption class="gallery-caption">Foundry Shop <span>Furnace</span></figcaption>
+    </figure>
+    <figure class="gallery-item" onclick="openLightbox('photos/Gallery7.jpeg','Final Class ft Sabbir Sir — HUM 1221')">
+      <img src="photos/Gallery7.jpg" alt="Final Class - HUM 1221">
+      <figcaption class="gallery-caption">Final Class ft Sabbir Sir <span>HUM 1221</span></figcaption>
+    </figure>
+    <figure class="gallery-item" onclick="openLightbox('photos/Gallery8.jpeg','Final Class ft Mashrur Sir — CSE 1281')">
+      <img src="photos/Gallery8.jpg" alt="Final Class - CSE 1281">
+      <figcaption class="gallery-caption">Final Class ft Mashrur Sir <span>CSE 1281</span></figcaption>
+    </figure>
+    <figure class="gallery-item" onclick="openLightbox('photos/Gallery9.jpeg','Final Class ft Mashrur Sir — CSE 1281')">
+      <img src="photos/Gallery9.jpg" alt="Final Class - CSE 1281">
+      <figcaption class="gallery-caption">Final Class ft Mashrur Sir <span>CSE 1281</span></figcaption>
+    </figure>
+    <figure class="gallery-item" onclick="openLightbox('photos/Gallery10.jpeg','Final Class ft Ahsan Habib Sir — HUM 1282')">
+      <img src="photos/Gallery10.jpg" alt="Final Class - HUM 1222">
+      <figcaption class="gallery-caption">Final Class ft Ahsan Habib Sir <span>HUM 1282</span></figcaption>
+    </figure>
+    <figure class="gallery-item" onclick="openLightbox('photos/Gallery11.jpeg','AURA')">
+      <img src="photos/Gallery11.jpg" alt="Formal Apparence">
+      <figcaption class="gallery-caption">AURA <span>AURA</span></figcaption>
+    </figure>
+    <figure class="gallery-item" onclick="openLightbox('photos/Gallery12.jpeg','AURA')">
+      <img src="photos/Gallery12.jpg" alt="Formal Apparence">
+      <figcaption class="gallery-caption">AURA<span>AURA</span></figcaption>
+    </figure>
+    <figure class="gallery-item" onclick="openLightbox('photos/Gallery13.jpeg','Preparing for CT — Study Room')">
+      <img src="photos/Gallery13.jpg" alt="Study Room">
+      <figcaption class="gallery-caption">Preparing for CT<span>Study Room</span></figcaption>
+    </figure>
+  </div>
+</section>
+</div><!-- /page-gallery -->
+
+<!-- ═══════════════════ CONTACT PAGE ═══════════════════ -->
+<div id="page-contact" class="page">
+<section id="contact" class="section-card contact-section">
+  <div class="batch-header">
+    <h2 class="batch-label">Contact</h2>
+    <p class="batch-sublabel">Contact in case of any urgency</p>
+  </div>
+
+  <div class="contact-box">
+    <div class="contact-box-inner">
+      <div class="contact-box-title">Quick contact</div>
+      <div class="contact-box-text">
+        Use the Facebook button above for the official RUET page, or use the email icon to open your mail app.
+        
+      </div>
+    </div>
+  </div>
+
+  <p class="contact-note">
+    <!-- EDIT TIP: To add another CR, copy one <article class="cr-card"> block and change the name, phone, and email.
+         To remove one, delete that block. -->
+  </p>
+
+  <div class="contact-grid">
+    <article class="cr-card">
+      <div class="cr-role">Class Representative</div>
+      <div class="cr-name">Shishir Sen</div>
+      <div class="cr-detail">Phone: <a href="tel:+8801743907758">+8801743907758</a></div>
+      <div class="cr-detail">Email: <a href="mailto:ayan@example.com">N/A</a></div>
+    </article>
+
+    <article class="cr-card">
+      <div class="cr-role">Class Representative</div>
+      <div class="cr-name">Labib Siddiquee</div>
+      <div class="cr-detail">Phone: <a href="tel:+8801887234237">+8801887234237</a></div>
+      <div class="cr-detail">Email: <a href="mailto:sadia@example.com">N/A</a></div>
+    </article>
+
+    <article class="cr-card">
+      <div class="cr-role">Developer</div>
+      <div class="cr-name">MD. Muntasir Mahbub Ariyan</div>
+      <div class="cr-detail">Phone: <a href="tel:+8801771642104">+8801771642104</a></div>
+      <div class="cr-detail">Email: <a href="mailto:ariyan2020.default@gmail.com">ariyan2020.default@gmail.com</a></div>
+    </article>
+  </div>
+</section>
+</div><!-- /page-contact -->
+
+<!-- ═══════════════════ HOME PAGE ═══════════════════ -->
+<div id="page-home" class="page active">
+
+<!-- ═══════════════════ BATCH SECTION ═══════════════════ -->
+<div class="section-card">
+  <div class="batch-header">
+    <!-- ✏️ EDIT: Change section name below -->
+    <h2 class="batch-label">ME 24 — Section A</h2>
+    <!-- ✏️ EDIT: Change tagline below -->
+    <p class="batch-sublabel">Where Gears Turn and Engineers are Born</p>
+  </div>
+
+  <!-- Photo Slider -->
+  <div class="photo-slider">
+
+    <button class="slider-arrow left" onclick="goTo((current - 1 + slides.length) % slides.length)">&#8592;</button>
+<button class="slider-arrow right" onclick="goTo((current + 1) % slides.length)">&#8594;</button>
+
+    <div class="photo-track" id="photoTrack">
+
+      <!-- ✏️ EDIT: Replace src with your actual photo URLs. Add/remove <div class="photo-slide"> blocks as needed -->
+      <div class="photo-slide">
+        <img src="photos/Slide_SecA_grpclass.jpg" alt="Students of Section A" onerror="this.src='https://placehold.co/600x210/1c2333/c8922a?text=ME+24+Section+A'"/>
+        <span class="photo-caption">Students of Section A — ME, RUET</span>
+      </div>
+      
+        <div class="photo-slide">
+        <img src="photos/TransportBuilding.jpg" alt="Before Transport Building" onerror="this.src='https://placehold.co/600x210/1c2333/c8922a?text=ME+24+Section+A'"/>
+        <span class="photo-caption">Last Mechanical Drawing Class — ME, RUET</span>
+      </div>
+
+      <div class="photo-slide">
+        <img src="https://www.me.ruet.ac.bd/public/storage/sliders/electric-vehicle-designed-and-developed-by-me-dept_13.jpg" alt="Electric Vehicle" onerror="this.src='https://placehold.co/600x210/1c2333/c8922a?text=ME+24+Section+A'"/>
+        <span class="photo-caption">Electric Vehicle — ME Dept., RUET</span>
+      </div>
+
+    </div><!-- /photo-track -->
+    <div class="slider-dots" id="dots"></div>
+  </div><!-- /photo-slider -->
+
+  <div class="accent-bar" style="margin-top:10px;"></div>
+</div><!-- /section-card -->
+
+<!-- ═══════════════════ ACADEMIC NOTE ═══════════════════ -->
+<div class="note-card">
+  <p class="note-label">Academic Note</p>
+  <p class="note-text">
+    <strong>Mechanical Engineering</strong> is the broadest and oldest branch of engineering —
+    the mother of all engineering disciplines.<br><br>
+    <!-- ✏️ EDIT: Change the honour code text below if needed -->
+    <strong>Honour Code :</strong> An Engineer shall live a life of honesty &amp; dignity.
+    He/She shall not cheat, steal or lie and must commit themselves to the welfare of mankind.
+  </p>
+  <p class="note-attribution">— Department of Mechanical Engineering, RUET</p>
+</div>
+
+<!-- ═══════════════════ STUDENT PROFILES ═══════════════════ -->
+<div class="profiles-section">
+  <h2 class="profiles-heading">Student Profiles</h2>
+
+  <!-- Search bar -->
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="searchInput" placeholder="Search by name, ID, or hometown…" oninput="filterStudents()"/>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════
+       ✏️ HOW TO ADD STUDENTS:
+       Copy one <div class="student-card"> block below
+       and paste it. Then fill in:
+         - name
+         - id (like 2400XXX)
+         - college
+         - hometown
+         - photo src (URL or local file path)
+       If no photo, remove the <img> tag and use
+       the initials placeholder instead.
+  ════════════════════════════════════════════════════ -->
+
+  <div id="studentList">
+
+    <!-- ── STUDENT 1 ── -->
+    
+
+    <div class="student-card" data-name="Sadik Mahamud" data-id="2402001" data-hometown="Dhaka" onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402001.jpg" alt="Sadik Mahamud"/>
+      </div>
+      <p class="student-name">Sadik Mahamud</p>
+      <p class="student-id">ID: 2402001</p>
+      <div class="student-info">
+        <span>Notre Dame College, Dhaka</span>
+        <span>Dhaka</span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/sadikmraihan" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801968805840" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="student-card" data-name="Jaydeep Kabiraj" data-id="2402002" data-hometown="Rajshahi" onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402002.jpg" alt="Jaydeep Kabiraj"/>
+      </div>
+      <p class="student-name">Jaydeep Kabiraj</p>
+      <p class="student-id">ID: 2402002</p>
+      <div class="student-info">
+        <span>New Government Degree College, Rajshahi</span>
+        <span>Rajshahi</span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/Jaydeep.kabiraj/" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801340267013" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+      <div class="student-card" data-name="ARNOB TALUKDER ABHRO" data-id="2402004" data-hometown="Netrakona " onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402004.jpg" alt="ARNOB TALUKDER ABHRO "/>
+      </div>
+      <p class="student-name">Arnob Talukder Abhro</p>
+      <p class="student-id">ID: 2402004</p>
+      <div class="student-info">
+        <span>Govt. Ananda Mohan College, Mymensingh</span>
+        <span>Netrakona</span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/at.abhro" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801521765562" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="student-card" data-name="Taqi Mahmud" data-id="2402005" data-hometown="Rangpur" onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402005.jpg" alt="Taqi Mahmud"/>
+      </div>
+      <p class="student-name">Taqi Mahmud</p>
+      <p class="student-id">ID: 2402005</p>
+      <div class="student-info">
+        <span>Rangpur Govt. College (RGC)</span>
+        <span>Rangpur</span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/taqi.mahmud.1" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801791730369" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+
+    <div class="student-card" data-name="MD Mahamudul Islam Maruf " data-id="2402006" data-hometown="Barishal" onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402006.jpg" alt="MD Mahamudul Islam Maruf "/>
+      </div>
+      <p class="student-name">MD Mahamudul Islam Maruf </p>
+      <p class="student-id">ID: 2402006</p>
+      <div class="student-info">
+        <span>Dhaka College</span>
+        <span>Barishal</span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/share/1B67KpqDGt/" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801641878179" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="student-card" data-name="Foysal Nahal" data-id="2402008" data-hometown="Bogura" onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402008.jpg" alt="Foysal Nahal"/>
+      </div>
+      <p class="student-name">Foysal Nahal</p>
+      <p class="student-id">ID: 2402008</p>
+      <div class="student-info">
+        <span>Notre Dame College, Dhaka</span>
+        <span>Bogura</span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/share/1G43BK9sii/" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801326563639" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="student-card" data-name="Yasin Arafat " data-id="2402009" data-hometown="Faridpur" onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402009.jpg" alt="Yasin Arafat"/>
+      </div>
+      <p class="student-name">Yasin Arafat </p>
+      <p class="student-id">ID: 2402009</p>
+      <div class="student-info">
+        <span>Birshreshtha noor mohammad public college</span>
+        <span>Faridpur</span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/share/1BRZ6RHUvM/" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801864821184" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="student-card" data-name="Md Rucknuzzaman Rashed" data-id="2402010" data-hometown="Dinajpur Sadar" onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402010.jpg" alt="Md Rucknuzzaman Rashed "/>
+      </div>
+      <p class="student-name">Md Rucknuzzaman Rashed</p>
+      <p class="student-id">ID: 2402010</p>
+      <div class="student-info">
+        <span>Dinajpur Government College, Dinajpur</span>
+        <span>Dinajpur Sadar</span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801521724233" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="student-card" data-name="Abir Alam" data-id="2402011" data-hometown="Dhaka" onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402011.jpg" alt="Abir Alam"/>
+      </div>
+      <p class="student-name">Abir Alam</p>
+      <p class="student-id">ID: 2402011</p>
+      <div class="student-info">
+        <span>Dr. Mahbubur Rahman Mollah College</span>
+        <span>Dhaka</span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/share/1JH2tczzWh/?mibextid=wwXIfr
+" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801973569749" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+
+    <div class="student-card" data-name="Md. Selim Reza" data-id="2402012" data-hometown="Pabna" onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402012.jpg" alt="Md. Selim Reza"/>
+      </div>
+      <p class="student-name">Md. Selim Reza</p>
+      <p class="student-id">ID: 2402012</p>
+      <div class="student-info">
+        <span>Govt. Edward College , Pabna</span>
+        <span>Pabna</span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/share/14bUoERDtwV/" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801609084363" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+
+    <div class="student-card" data-name="Md. Jubayer Hossain " data-id="2402013" data-hometown="Tangail " onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402013.jpg" alt="Md. Jubayer Hossain "/>
+      </div>
+      <p class="student-name">Md. Jubayer Hossain </p>
+      <p class="student-id">ID: 2402013</p>
+      <div class="student-info">
+        <span>Engineering university school and college </span>
+        <span>Tangail </span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/share/14bUoERDtwV/" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801609084363" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="student-card" data-name="Jabed Iptoh" data-id="2402016" data-hometown="Cumilla" onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402016.jpg" alt="Jabed Iptoh"/>
+      </div>
+      <p class="student-name">Jabed Iptoh</p>
+      <p class="student-id">ID: 2402016</p>
+      <div class="student-info">
+        <span>Cumilla Government City College, Cumilla </span>
+        <span>Cumilla</span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/share/1CJH5A6FwT/" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801618724381" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+
+    <div class="student-card" data-name="Tahsan Alam Tohin" data-id="2402018" data-hometown="Narsingdi   " onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402018.jpg" alt="Tahsan Alam Tohin"/>
+      </div>
+      <p class="student-name">Tahsan Alam Tohin</p>
+      <p class="student-id">ID: 2402018</p>
+      <div class="student-info">
+        <span>Narsingdi Govt.College</span>
+        <span>Narsingdi</span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/share/1CpdqACaBn/" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801975819824" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="student-card" data-name="Md. Mon Mohan" data-id="2402019" data-hometown="Rajshahi" onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402019.jpg" alt="Md. Mon Mohan"/>
+      </div>
+      <p class="student-name">Md. Mon Mohan</p>
+      <p class="student-id">ID: 2402019</p>
+      <div class="student-info">
+        <span>Agrani School & College </span>
+        <span>Rajshahi </span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/mon.mohan.9277" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801328984847" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="student-card" data-name="S.SAMIN" data-id="2402020" data-hometown="Mymensingh" onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402020.jpg" alt="S.SAMIN"/>
+      </div>
+      <p class="student-name">S.Samin</p>
+      <p class="student-id">ID: 2402020</p>
+      <div class="student-info">
+        <span>Ananda Mohan College,Mymensingh</span>
+        <span>Mymensingh</span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801315077479" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="student-card" data-name="MDA LOTIF SORKAR" data-id="2402021" data-hometown="Rajshahi" onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402021.jpg" alt="MDA LOTIF SORKAR"/>
+      </div>
+      <p class="student-name">MDA Lotif Sorkar</p>
+      <p class="student-id">ID: 2402021</p>
+      <div class="student-info">
+        <span>NGDC</span>
+        <span>Rajshahi</span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801799551658" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="student-card" data-name="Rukme Ara" data-id="2402023" data-hometown="Kushtia" onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402023.jpg" alt="Rukme Ara"/>
+      </div>
+      <p class="student-name">Rukme Ara</p>
+      <p class="student-id">ID: 2402023</p>
+      <div class="student-info">
+        <span>Sheukhpara Dukhi Mahmud College </span>
+        <span>Kushtia</span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801760473801" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="student-card" data-name="Shishir Sen" data-id="2402024" data-hometown="Thakurgaon " onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402024.jpg" alt="Shishir Sen"/>
+      </div>
+      <p class="student-name">Shishir Sen</p>
+      <p class="student-id">ID: 2402024</p>
+      <div class="student-info">
+        <span>Dhaka College</span>
+        <span>Thakurgaon</span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/share/1BNibjbB6g/" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801743907758" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="student-card" data-name="Farhan Tanvir Torsha" data-id="2402026" data-hometown="Jashore " onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402026.jpg" alt="Farhan Tanvir Torsha"/>
+      </div>
+      <p class="student-name">Farhan Tanvir Torsha </p>
+      <p class="student-id">ID: 2402026</p>
+      <div class="student-info">
+        <span>Govt. Michael Madhusudan College, Jashore</span>
+        <span>Jashore</span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/share/1CciVB51LU/" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801969190698" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="student-card" data-name="Mahmood Al Amin Omi" data-id="2402027" data-hometown="Rajshahi " onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402027.jpg" alt="Mahmood Al Amin Omi"/>
+      </div>
+      <p class="student-name">Mahmood Al Amin Omi</p>
+      <p class="student-id">ID: 2402027</p>
+      <div class="student-info">
+        <span>A.H.M Kamaruzzaman Govt. Degree College , Rajshahi</span>
+        <span>Rajshahi</span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/share/1Nojp9nqPX/" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801609139024" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="student-card" data-name="Md.Mustain Billah Jihad" data-id="2402028" data-hometown="Gaibandha " onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402028.jpg" alt="Md.Mustain Billah Jihad"/>
+      </div>
+      <p class="student-name">Md.Mustain Billah Jihad</p>
+      <p class="student-id">ID: 2402028</p>
+      <div class="student-info">
+        <span>Notre Dame College, Dhaka</span>
+        <span>Gaibandha </span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/mustain.billah.7564" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801318908353" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="student-card" data-name="Debopriyo Roy Rahul" data-id="2402029" data-hometown="Sylhet " onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402029.jpg" alt="Debopriyo Roy Rahul"/>
+      </div>
+      <p class="student-name">Debopriyo Roy Rahul</p>
+      <p class="student-id">ID: 2402029</p>
+      <div class="student-info">
+        <span>MC College</span>
+        <span>Sylhet</span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/debopriyo.roy.618007" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801866136873" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+    
+    <div class="student-card" data-name="Prottus Nabhan Reza" data-id="2402030" data-hometown="Rajshahi" onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402030.jpg" alt="Prottus Nabhan Reza"/>
+      </div>
+      <p class="student-name">Prottus Nabhan Reza</p>
+      <p class="student-id">ID: 2402030</p>
+      <div class="student-info">
+        <span>Rajshahi College</span>
+        <span>Rajshahi</span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/share/1CNE5cTDms/" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801841068411" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="student-card" data-name="Md. Arafath Bhuiyan" data-id="2402032" data-hometown="Comilla" onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402032.jpg" alt="Md. Arafath Bhuiyan "/>
+      </div>
+      <p class="student-name">Md. Arafath Bhuiyan</p>
+      <p class="student-id">ID: 2402032</p>
+      <div class="student-info">
+        <span>Notre Dame College, Dhaka</span>
+        <span>Comilla</span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/arafath.bhuiyan.31" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801746478281" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="student-card" data-name="Imrul Bari Mehedi " data-id="2402033" data-hometown="Rajshahi" onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402033.jpg" alt="Imrul Bari Mehedi "/>
+      </div>
+      <p class="student-name">Imrul Bari Mehedi</p>
+      <p class="student-id">ID: 2402033</p>
+      <div class="student-info">
+        <span>Notre Dame College, Dhaka</span>
+        <span>Rajshahi </span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/share/17UGdM8PrV/" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801604699906" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="student-card" data-name="MD SALMAN SADIK" data-id="2402034" data-hometown="Rangpur" onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402034.jpg" alt="MD SALMAN SADIK"/>
+      </div>
+      <p class="student-name">MD SALMAN SADIK</p>
+      <p class="student-id">ID: 2402034</p>
+      <div class="student-info">
+        <span>Rangpur Government City College</span>
+        <span>Rangpur </span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/share/1JT8XRHrL4/" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801319118206" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="student-card" data-name="Labib Siddiquee" data-id="2402035" data-hometown="Cox’s Bazar" onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402035.jpg" alt="Labib Siddiquee"/>
+      </div>
+      <p class="student-name">Labib Siddiquee</p>
+      <p class="student-id">ID: 2402035</p>
+      <div class="student-info">
+        <span>Chattogram Cantonment Public College</span>
+        <span>Cox’s Bazar</span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/labib.siddiquee.5" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801887234237" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="student-card" data-name="Mahdee Mohammad" data-id="2402036" data-hometown="Narsingdi" onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402036.jpg" alt="Mahdee Mohammad"/>
+      </div>
+      <p class="student-name">Mahdee Mohammad</p>
+      <p class="student-id">ID: 2402036</p>
+      <div class="student-info">
+        <span>Abdul Kadir Mollah City College</span>
+        <span>Narsingdi</span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="facebook.com/confused.mahdee" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801877718893" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="student-card" data-name="Labiba Raisa Kanta" data-id="2402037" data-hometown="Magura" onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402037.jpg" alt="Labiba Raisa Kanta"/>
+      </div>
+      <p class="student-name">Labiba Raisa Kanta</p>
+      <p class="student-id">ID: 2402037</p>
+      <div class="student-info">
+        <span>Adamjee Cantonment College</span>
+        <span>Magura</span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/labiba.raisa.kanta" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801771234033" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="student-card" data-name="Md. Abdul Hamid" data-id="2402038" data-hometown="Saidpur/Nilphamari" onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402038.jpg" alt="Md. Abdul Hamid"/>
+      </div>
+      <p class="student-name">Md. Abdul Hamid</p>
+      <p class="student-id">ID: 2402038</p>
+      <div class="student-info">
+        <span>Saidpur Government Science College</span>
+        <span>Saidpur/Nilphamari</span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/profile.php?id=100080300520040" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801407884934" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="student-card" data-name="Nusrat Jahan Anchal" data-id="2402039" data-hometown="Narayanganj " onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402039.jpg" alt="Nusrat Jahan Anchal"/>
+      </div>
+      <p class="student-name">Nusrat Jahan Anchal</p>
+      <p class="student-id">ID: 2402039</p>
+      <div class="student-info">
+        <span>Sonargaon Kazi Fazlul Haque Women's College</span>
+        <span>Narayanganj</span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801577424973" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="student-card" data-name="MD. SAFIAN SIAM" data-id="2402040" data-hometown="Dhaka" onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402040.jpg" alt="MD. SAFIAN SIAM"/>
+      </div>
+      <p class="student-name">MD. Safian Siam</p>
+      <p class="student-id">ID: 2402040</p>
+      <div class="student-info">
+        <span>Dr. Mahbubur Rahman Mollah College</span>
+        <span>Dhaka</span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/safian.siam" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801928966330" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="student-card" data-name="Maisha Tasnia Adrika" data-id="2402041" data-hometown="Cumilla " onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402041.jpg" alt="Maisha Tasnia Adrika"/>
+      </div>
+      <p class="student-name">Maisha Tasnia Adrika</p>
+      <p class="student-id">ID: 2402041</p>
+      <div class="student-info">
+        <span>Dhaka City College</span>
+        <span>Cumilla</span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/maishatasnia.adrika.7" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801861867374" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="student-card" data-name="Sagoto Bhowmick Emon " data-id="2402042" data-hometown="Tangail " onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402042.jpg" alt="Sagoto Bhowmick Emon"/>
+      </div>
+      <p class="student-name">Sagoto Bhowmick Emon</p>
+      <p class="student-id">ID: 2402042</p>
+      <div class="student-info">
+        <span>Notre Dame College,Dhaka</span>
+        <span>Tangail</span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/share/1E5wmQARtw/" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801540145265" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="student-card" data-name="Anonno Rahman" data-id="2402044" data-hometown="Rajshahi " onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402044.jpg" alt="Anonno Rahman"/>
+      </div>
+      <p class="student-name">Anonno Rahman</p>
+      <p class="student-id">ID: 2402044</p>
+      <div class="student-info">
+        <span>Shaheed Buddhigibi, Rajshahi</span>
+        <span>Rajshahi</span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/share/18iyEgHJyj/" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801612014217" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="student-card" data-name="Maher Afser Prithil" data-id="2402045" data-hometown="Mymensingh" onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402045.jpg" alt="Maher Afser Prithil"/>
+      </div>
+      <p class="student-name">Maher Afser Prithil</p>
+      <p class="student-id">ID: 2402045</p>
+      <div class="student-info">
+        <span>Ananda Mohan College, Mymensingh</span>
+        <span>Mymensingh</span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801797174425" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="student-card" data-name="M.Muhtadi Zaman Safat" data-id="2402046" data-hometown="Lalmonirhat" onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402046.jpg" alt="M.Muhtadi Zaman Safat"/>
+      </div>
+      <p class="student-name">M.Muhtadi Zaman Safat</p>
+      <p class="student-id">ID: 2402046</p>
+      <div class="student-info">
+        <span>Dhaka Residential Model College</span>
+        <span>Lalmonirhat </span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/share/18gXoPQGA2/" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801792067902" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="student-card" data-name="MUHAMMAD MIKAT" data-id="2402047" data-hometown="Rajshahi" onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402047.jpg" alt="MUHAMMAD MIKAT"/>
+      </div>
+      <p class="student-name">Muhammad Mikat</p>
+      <p class="student-id">ID: 2402047</p>
+      <div class="student-info">
+        <span>Masjid Mission Academy School & Collage</span>
+        <span>Rajshahi</span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/mi.kat.923" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801410772808" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="student-card" data-name="Munna Sarder" data-id="2402048" data-hometown="Gopalganj " onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402048.jpg" alt="Munna Sarder"/>
+      </div>
+      <p class="student-name">Munna Sarder</p>
+      <p class="student-id">ID: 2402048</p>
+      <div class="student-info">
+        <span>Gopalganj Govt. College</span>
+        <span>Gopalganj</span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/mu.nna.115859" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801773131965" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="student-card" data-name="Sakib" data-id="2402049" data-hometown="Sirajganj " onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402049.jpg" alt="Sakib"/>
+      </div>
+      <p class="student-name">Sakib</p>
+      <p class="student-id">ID: 2402049</p>
+      <div class="student-info">
+        <span>Sirajganj Government College</span>
+        <span>Sirajganj</span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/sakiba.ala.hasana.768593" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801521773104" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="student-card" data-name="ARIAN HOQUE MAHI" data-id="2402050" data-hometown="Barishal" onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402050.jpg" alt="ARIAN HOQUE MAHI"/>
+      </div>
+      <p class="student-name">Arian Hoque Mahi</p>
+      <p class="student-id">ID: 2402050</p>
+      <div class="student-info">
+        <span>Amrita Lal De College </span>
+        <span>Barishal </span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/share/1HJfx7CZBp/" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801306063717" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- ── STUDENT 2 ── -->
+    <div class="student-card" data-name="Rafsan Jani" data-id="2402051" data-hometown="Mymensingh" onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402051.jpg" alt="Rafsan Jani"/>
+      </div>
+      <p class="student-name">Rafsan Jani</p>
+      <p class="student-id">ID: 2402051</p>
+      <div class="student-info">
+        <span>Agricultural University College</span>
+        <span>Mymensingh</span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://facebook.com/" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/880100000000" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="student-card" data-name="Dewan Mifta Uz-Zaman" data-id="2402052" data-hometown="Sylhet" onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402052.jpg" alt="Dewan Mifta Uz-Zaman"/>
+      </div>
+      <p class="student-name">Dewan Mifta Uz-Zaman</p>
+      <p class="student-id">ID: 2402052</p>
+      <div class="student-info">
+        <span>Adamjee Cantonment College, Dhaka</span>
+        <span>Sylhet</span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/share/17JAS1wWEe/?mibextid=wwXIfr
+" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801410069182" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="student-card" data-name="MD. Muntasir Mahbub Ariyan" data-id="2402053" data-hometown="Bogura" onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402053.jpg" alt="Ariyan"/>
+        <span class="badge">Dev</span>
+      </div>
+      <p class="student-name">MD. Muntasir Mahbub Ariyan</p>
+      <p class="student-id">ID: 2402053</p>
+      <div class="student-info">
+        <span>Govt. Ananda Mohan College, Mymensingh</span>
+        <span>Bogra</span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/share/18qazdMHoi/
+" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801771642104" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="student-card" data-name="Arina Binty Mahfuz" data-id="2402054" data-hometown="Chattogram" onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402054.jpg" alt="Arina Binty Mahfuz"/>
+      </div>
+      <p class="student-name">Arina Binty Mahfuz</p>
+      <p class="student-id">ID: 2402054</p>
+      <div class="student-info">
+        <span>Govt. Hazi Muhammad Mohsin College, Chattogram</span>
+        <span>Chattogram</span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/share/17K5caXuPP/" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801761683057" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="student-card" data-name="OMOR" data-id="2402055" data-hometown="Pirganj, Thakurgaon" onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402055.jpg" alt="OMOR"/>
+      </div>
+      <p class="student-name">Omor</p>
+      <p class="student-id">ID: 2402055</p>
+      <div class="student-info">
+        <span>Dinajpur Govt College, Dinajpur</span>
+        <span>Pirganj, Thakurgaon</span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/OMOR2177" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801521771659" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="student-card" data-name="Joyanto Ray" data-id="2402056" data-hometown="Nilphamari" onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402056.jpg" alt="Joyanto Ray"/>
+      </div>
+      <p class="student-name">Joyanto Ray</p>
+      <p class="student-id">ID: 2402056</p>
+      <div class="student-info">
+        <span>Rangpur Govt. City College, Rangpur</span>
+        <span>Nilphamari</span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/joyanto.ray.1447" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801518932755" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- ── STUDENT 3 ── -->
+    <div class="student-card" data-name="Mst.Moomtahinah Mir" data-id="2402057" data-hometown="Bogura" onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402057.jpg" alt="Mst.Moomtahinah Mir"/>
+      </div>
+      <p class="student-name">Mst.Moomtahinah Mir</p>
+      <p class="student-id">ID: 2402057</p>
+      <div class="student-info">
+        <span>Govt.Azizul Haque College, Bogura</span>
+        <span>Bogura</span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/moomtahinah.mir.2025" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801893321113" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="student-card" data-name="Atik Shahriar Islam Shams" data-id="2402058" data-hometown="Lalmonirhat" onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402058.jpg" alt="Atik Shahriar Islam Shams"/>
+      </div>
+      <p class="student-name">Atik Shahriar Islam Shams</p>
+      <p class="student-id">ID: 2402058</p>
+      <div class="student-info">
+        <span>Cantonment Public School and College, Lalmonirhat </span>
+        <span>Lalmonirhat</span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/share/14XmFKEv1qZ/" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801861865278" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="student-card" data-name="Subrato Chandra Shill" data-id="2402059" data-hometown="Cumilla " onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402059.jpg" alt="Subrato Chandra Shill"/>
+      </div>
+      <p class="student-name">Subrato Chandra Shill</p>
+      <p class="student-id">ID: 2402059</p>
+      <div class="student-info">
+        <span>Lalmai Govt. College</span>
+        <span>Cumilla</span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/share/14XmFKEv1qZ/" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801861865278" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="student-card" data-name="Nasif Ahmed " data-id="2402060" data-hometown="Thakurgaon " onclick="openStudentModal(this)">
+      <div class="student-photo-wrap">
+        <img class="student-photo" src="photos/2402060.jpg" alt="Nasif Ahmed"/>
+      </div>
+      <p class="student-name">Nasif Ahmed</p>
+      <p class="student-id">ID: 2402060</p>
+      <div class="student-info">
+        <span>Dinajpur Government City College</span>
+        <span>Thakurgaon</span>
+      </div>
+      <div class="student-contacts">
+        <a class="contact-icon-btn fb" href="https://www.facebook.com/nasiffb6" target="_blank" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2S2 6.48 2 12.06c0 5.03 3.68 9.19 8.5 9.94v-7.03H8.01v-2.91H10.5V9.84c0-2.46 1.47-3.82 3.72-3.82 1.08 0 2.22.19 2.22.19v2.44h-1.25c-1.23 0-1.62.76-1.62 1.54v1.85h2.76l-.44 2.91h-2.32V22c4.82-.75 8.5-4.91 8.5-9.94Z"/></svg>
+        </a>
+        <a class="contact-icon-btn ph" href="https://wa.me/8801518696079" target="_blank" title="WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.878-1.438A9.945 9.945 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a7.946 7.946 0 0 1-4.031-1.094l-.29-.173-2.894.853.854-2.833-.19-.302A7.948 7.948 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8Z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- ── ADD MORE STUDENTS HERE ── -->
+    <!-- Copy the block above and paste it below, changing the details -->
+
+  </div><!-- /studentList -->
+
+  <p class="no-results" id="noResults">No student found matching your search.</p>
+
+</div><!-- /profiles-section -->
+</div><!-- /page-home -->
+
+<!-- ═══════════════════ FOOTER ═══════════════════ -->
+<footer class="footer">
+  <p class="footer-logo">ME · 24</p>
+  <p class="footer-text">
+    <!-- ✏️ EDIT: Change your name and section below -->
+    © Designed &amp; Developed by <strong style="color:#e8b84b">MD. Muntasir Mahbub Ariyan</strong><br>
+    Section A &nbsp;·&nbsp; Department of Mechanical Engineering<br>
+    <a href="https://www.me.ruet.ac.bd">me.ruet.ac.bd</a>
+  </p>
+</footer>
+
+<!-- ═══════════════════ SCRIPTS ═══════════════════ -->
+<script>
+  // ── Splash Screen ──
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.getElementById('splash').classList.add('hidden');
+    }, 1800);
+  });
+
+  // ── Rotating Quotes ──
+  const quotes = [
+    { text: "Mechanical Engineering is the broadest and oldest branch of engineering — the mother of all engineering disciplines.", attr: "— Department of Mechanical Engineering, RUET" },
+    { text: "Engineers like to solve problems. If there are no problems handily available, they will create their own problems.", attr: "— Scott Adams" },
+    { text: "The scientist discovers a new type of material or energy and the engineer discovers a new use for it.", attr: "— Gordon Lindsay Glegg" },
+    { text: "To the optimist, the glass is half full. To the pessimist, the glass is half empty. To the engineer, the glass is twice as big as it needs to be.", attr: "— Unknown" },
+  ];
+  const q = quotes[Math.floor(Math.random() * quotes.length)];
+  const noteEl = document.querySelector('.note-text');
+  const attrEl = document.querySelector('.note-attribution');
+  if (noteEl) noteEl.innerHTML = `<strong>Mechanical Engineering</strong> — ${q.text}<br><br><strong>Honour Code :</strong> An Engineer shall live a life of honesty &amp; dignity. He/She shall not cheat, steal or lie and must commit themselves to the welfare of mankind.`;
+  if (attrEl) attrEl.textContent = q.attr;
+
+  // ── Student Counter ──
+  function animateCounter(target) {
+    const el = document.getElementById('counterNum');
+    if (!el) return;
+    let n = 0;
+    const step = Math.ceil(target / 40);
+    const timer = setInterval(() => {
+      n = Math.min(n + step, target);
+      el.textContent = n;
+      if (n >= target) clearInterval(timer);
+    }, 30);
+  }
+  window.addEventListener('load', () => {
+    const total = document.querySelectorAll('.student-card').length;
+    setTimeout(() => animateCounter(total), 1900);
+  });
+
+  // ── Tab Switcher ──
+  function switchTab(tabName, btn) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.top-link').forEach(b => b.classList.remove('active'));
+    document.getElementById('page-' + tabName).classList.add('active');
+    btn.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── Photo Slider ──
+  const track  = document.getElementById('photoTrack');
+  const slides = track.querySelectorAll('.photo-slide');
+  const dotsEl = document.getElementById('dots');
+  let current  = 0;
+
+  slides.forEach((_, i) => {
+    const d = document.createElement('span');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => goTo(i);
+    dotsEl.appendChild(d);
+  });
+
+  function goTo(n) {
+    current = n;
+    track.style.transform = `translateX(-${100 * n}%)`;
+    dotsEl.querySelectorAll('.dot').forEach((d, i) =>
+      d.classList.toggle('active', i === n));
+  }
+  setInterval(() => goTo((current + 1) % slides.length), 2000);
+
+  // ── Gear Rotation ──
+  const gear = document.querySelector('.gear-float');
+  window.addEventListener('scroll', () => {
+    if (!gear) return;
+    const deg = window.scrollY * 0.4;
+    gear.style.transform = `rotate(${deg}deg)`;
+    gear.style.opacity = Math.min(0.35, 0.1 + window.scrollY * 0.001);
+  });
+
+  // ── Search / Filter ──
+  function filterStudents() {
+    const q    = document.getElementById('searchInput').value.toLowerCase();
+    const cards = document.querySelectorAll('.student-card');
+    let visible = 0;
+    cards.forEach(card => {
+      const name = (card.dataset.name || '').toLowerCase();
+      const id   = (card.dataset.id   || '').toLowerCase();
+      const home = (card.dataset.hometown || '').toLowerCase();
+      const match = !q || name.includes(q) || id.includes(q) || home.includes(q);
+      card.style.display = match ? '' : 'none';
+      if (match) visible++;
+    });
+    document.getElementById('noResults').style.display = visible === 0 ? 'block' : 'none';
+  }
+
+  // ── Gallery Lightbox ──
+  function openLightbox(src, caption) {
+    document.getElementById('lightbox-img').src = src;
+    document.getElementById('lightbox-caption').textContent = caption || '';
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // ── Student Modal ──
+  function openStudentModal(card) {
+    const photo   = card.querySelector('.student-photo');
+    const name    = card.querySelector('.student-name');
+    const id      = card.querySelector('.student-id');
+    const info    = card.querySelectorAll('.student-info span');
+    const fbLink  = card.querySelector('.contact-icon-btn.fb');
+    const waLink  = card.querySelector('.contact-icon-btn.ph');
+    const vision  = card.dataset.vision || 'Proud to be a member of this voyage.';
+
+    document.getElementById('modal-photo').src = photo ? photo.src : '';
+    document.getElementById('modal-name').textContent = name ? name.textContent : '';
+    document.getElementById('modal-id').textContent   = id   ? id.textContent   : '';
+    document.getElementById('modal-college').textContent  = info[0] ? info[0].textContent : '';
+    document.getElementById('modal-hometown').textContent = info[1] ? info[1].textContent : '';
+    document.getElementById('modal-vision').textContent   = vision;
+    document.getElementById('modal-fb').href = fbLink ? fbLink.href : '#';
+    document.getElementById('modal-wa').href = waLink ? waLink.href : '#';
+
+    document.getElementById('student-modal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal(e, force) {
+    if (force || (e && e.target === document.getElementById('student-modal'))) {
+      document.getElementById('student-modal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  }
+</script>
+
+<div class="gear-float">⚙</div>
+
+</body>
+</html>
